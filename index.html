@@ -7,6 +7,51 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
 <style>
+  /* ==================== UTC CLOCK ==================== */
+  .utc-clock{
+    position:absolute;
+    top:clamp(14px, 1.8vh, 26px);
+    left:50%;
+    transform:translateX(-50%);
+    z-index:5;
+    background:rgba(10,18,48,0.65);
+    border:1px solid rgba(180,124,255,0.30);
+    border-radius:12px;
+    padding:8px 22px;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    text-align:center;
+    pointer-events:none;
+    box-shadow:0 6px 22px rgba(0,0,0,0.45),
+               0 0 20px rgba(180,124,255,0.25);
+    font-family:'Consolas','SF Mono','Menlo',monospace;
+    min-width:170px;
+  }
+  .utc-clock .utc-label{
+    font-size:clamp(9px, 0.7vw, 11px);
+    letter-spacing:2.8px;color:#B47CFF;font-weight:700;
+    margin-bottom:2px;
+  }
+  .utc-clock .utc-time{
+    font-size:clamp(14px, 1.1vw, 18px);
+    color:#fff;font-weight:700;letter-spacing:1.4px;
+    text-shadow:0 0 12px rgba(180,124,255,.6);
+  }
+  .utc-clock .utc-date{
+    font-size:clamp(9px, 0.7vw, 11px);
+    color:#c9d0ee;letter-spacing:1.5px;margin-top:2px;
+    opacity:0.85;
+  }
+  .utc-clock .sun-position{
+    font-size:clamp(9px, 0.7vw, 10.5px);
+    color:#FFC880;letter-spacing:1px;margin-top:4px;
+    opacity:0.9;
+  }
+  .utc-clock .sun-position::before{
+    content:"☀ ";
+    font-size:12px;
+    color:#FFD48A;
+  }
+
   :root{
     --bg-0:#01030b;
     --bg-1:#050a1c;
@@ -249,6 +294,7 @@
 
 <div class="hint"><b>Click</b> any dot to see plants · <b>Drag</b> to rotate · <b>Scroll</b> to zoom</div>
 
+
 <!-- <div class="left-panels">
   <div class="panel">
     <h4>TECHNOLOGY</h4>
@@ -398,6 +444,7 @@ cm.append("feMergeNode").attr("in","SourceGraphic");
 
 const gAtmos    = svg.append("g");
 const gGlobe    = svg.append("g");
+const gShadow   = svg.append("g");  /* day/night terminator overlay */
 const gGraticule= svg.append("g");
 const gCountries= svg.append("g");
 const gLights   = svg.append("g");
@@ -477,10 +524,100 @@ function isVisible(lon,lat){
   return cosC > 0.05;
 }
 
+/* ==================== DAY / NIGHT TERMINATOR ====================
+   The night side is drawn as a d3.geoCircle of radius 90° centered on the
+   antipode of the sun. Updates in real time based on UTC. */
+
+/* Move gShadow so it sits ABOVE the countries layer but BELOW the city lights
+   (this way land is darkened on the night side while city lights stay bright). */
+gShadow.node().parentNode.insertBefore(gShadow.node(), gLights.node());
+
+/* Two shading shapes:
+   - Day side: a very soft warm brightening overlay
+   - Night side: a stronger cool darkening overlay
+   Both are 90° d3.geoCircles that stick to the sphere as it rotates. */
+const dayPath = gShadow.append("path")
+  .attr("class","day-side")
+  .attr("fill","rgba(255,235,180,0.10)")
+  .attr("pointer-events","none");
+
+const nightPath = gShadow.append("path")
+  .attr("class","night-side")
+  .attr("fill","rgba(0,4,20,0.55)")
+  .attr("pointer-events","none");
+
+/* Sub-solar point calculator (where the sun is directly overhead). */
+function getSunSubpoint(){
+  const now = new Date();
+  const utcH = now.getUTCHours() + now.getUTCMinutes()/60 + now.getUTCSeconds()/3600;
+  // Approx day-of-year
+  const yearStart = Date.UTC(now.getUTCFullYear(), 0, 0);
+  const dayOfYear = Math.floor((now - yearStart) / 86400000);
+  // Solar declination (Cooper's approximation, degrees)
+  const decl = 23.44 * Math.sin(2 * Math.PI * (284 + dayOfYear) / 365);
+  // Sub-solar longitude: sun over 0° at 12:00 UTC, moves -15° per hour
+  let lng = -15 * (utcH - 12);
+  while (lng > 180)  lng -= 360;
+  while (lng < -180) lng += 360;
+  return { lat: decl, lng: lng };
+}
+
+/* Convert lat/lng to a text name of the nearest country/region (rough). */
+function sunRegion(lat, lng){
+  const regs = [
+    {n:"Pacific Ocean",  ln:[-180,-100], la:[-90,90]},
+    {n:"North America",  ln:[-140,-50],  la:[10,80]},
+    {n:"South America",  ln:[-90,-30],   la:[-60,10]},
+    {n:"Atlantic Ocean", ln:[-50,-10],   la:[-60,60]},
+    {n:"North Atlantic", ln:[-30,-5],    la:[40,80]},
+    {n:"Europe",         ln:[-10,40],    la:[35,72]},
+    {n:"North Africa",   ln:[-15,35],    la:[10,35]},
+    {n:"Sub-Saharan Africa", ln:[-20,50], la:[-35,10]},
+    {n:"Middle East",    ln:[35,60],     la:[12,42]},
+    {n:"Indian Ocean",   ln:[45,100],    la:[-40,10]},
+    {n:"Central Asia",   ln:[50,90],     la:[30,55]},
+    {n:"South Asia",     ln:[60,95],     la:[5,35]},
+    {n:"East Asia",      ln:[95,145],    la:[20,55]},
+    {n:"Southeast Asia", ln:[95,140],    la:[-11,20]},
+    {n:"Oceania",        ln:[110,180],   la:[-50,-10]},
+    {n:"North Pacific",  ln:[140,180],   la:[20,70]},
+  ];
+  for (const r of regs){
+    if (lng >= r.ln[0] && lng <= r.ln[1] && lat >= r.la[0] && lat <= r.la[1]) return r.n;
+  }
+  return "the open ocean";
+}
+
+/* Draw the day-side (lightening) and night-side (darkening) hemispheres. */
+function updateShadow(){
+  const sun = getSunSubpoint();
+  // Day hemisphere is a 90° circle centered on the sub-solar point
+  const dayGeo = d3.geoCircle().center([sun.lng, sun.lat]).radius(90)();
+  dayPath.attr("d", path(dayGeo));
+  // Night hemisphere = 90° circle centered on the antipode of the sun
+  const antiLng = sun.lng > 0 ? sun.lng - 180 : sun.lng + 180;
+  const antiLat = -sun.lat;
+  const nightGeo = d3.geoCircle().center([antiLng, antiLat]).radius(90)();
+  nightPath.attr("d", path(nightGeo));
+}
+
+/* UTC date only — refreshes once per minute. Shadow refreshes every minute too. */
+function updateUTCClock(){
+  const now = new Date();
+  const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const dstr  = `${String(now.getUTCDate()).padStart(2,"0")} ${months[now.getUTCMonth()]} ${now.getUTCFullYear()}`;
+  const de = document.getElementById("utcDateValue");
+  if (de) de.textContent = dstr;
+}
+updateUTCClock();
+setInterval(() => { updateUTCClock(); updateShadow(); }, 60000);
+/* =============================================================== */
+
 function updatePositions(){
   gGraticule.selectAll("path").attr("d",path);
   gCountries.selectAll("path").attr("d",path);
   gGlobe.selectAll("path").attr("d",path);
+  updateShadow();   /* keep day/night terminator aligned with rotation */
   gArcs.selectAll("path.arc-base").attr("d",d=>path(d.geo));
   gArcs.selectAll("path.arc-anim").attr("d",d=>path(d.geo)).each(function(d){ d._len = this.getTotalLength(); });
   gPoints.selectAll("g.pt").each(function(d){
@@ -488,10 +625,25 @@ function updatePositions(){
     const visible = isVisible(d.lon,d.lat) && p;
     d3.select(this).attr("transform", p?`translate(${p[0]},${p[1]})`:null).style("display", visible?null:"none");
   });
+  /* City lights show ONLY on the night side of the globe (based on UTC sun position). */
+  const sun = getSunSubpoint();
+  const sunLatRad = sun.lat * Math.PI / 180;
+  const sinSun = Math.sin(sunLatRad);
+  const cosSun = Math.cos(sunLatRad);
   gLights.selectAll("g.city").each(function(d){
-    const p = projection([d[1], d[0]]);
-    const visible = isVisible(d[1], d[0]) && p;
-    d3.select(this).attr("transform", p?`translate(${p[0]},${p[1]})`:null).style("display", visible?null:"none");
+    const lat = d[0], lng = d[1];
+    const p = projection([lng, lat]);
+    const onHemisphere = isVisible(lng, lat) && p;
+    // Day/night check: cosine of angular distance from the sub-solar point
+    // > 0 → daytime (hide the light);  <= 0 → nighttime (show the light)
+    const latRad = lat * Math.PI / 180;
+    const dlng   = (lng - sun.lng) * Math.PI / 180;
+    const cosDist = Math.sin(latRad)*sinSun + Math.cos(latRad)*cosSun*Math.cos(dlng);
+    const isNight = cosDist < 0.05;   // small buffer so the terminator zone still glows softly
+    const show = onHemisphere && isNight;
+    d3.select(this)
+      .attr("transform", p ? `translate(${p[0]},${p[1]})` : null)
+      .style("display", show ? null : "none");
   });
   updateHQLabel();
   positionActiveCard();
