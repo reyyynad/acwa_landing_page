@@ -241,7 +241,7 @@
        alt="ACWA Pulse" />
   <div class="tagline">GLOBAL PORTFOLIO CONNECTED</div>
   <div class="summary">
-    <strong>107 assets in 15 countries</strong><br/>
+    <strong>84 assets in 13 countries</strong><br/>
     unified to ACWA Power<br/>
     Headquarters in Riyadh
   </div>
@@ -276,11 +276,11 @@
     <h4>PORTFOLIO SNAPSHOT</h4>
     <div class="snap-row">
       <span class="snap-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21V8l8-5 8 5v13"/><path d="M9 21v-6h6v6"/></svg></span>
-      <div><div class="snap-num">111</div><div class="snap-lbl">Total Assets</div></div>
+      <div><div class="snap-num">84</div><div class="snap-lbl">Total Assets</div></div>
     </div>
     <div class="snap-row">
       <span class="snap-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
-      <div><div class="snap-num">16</div><div class="snap-lbl">Countries</div></div>
+      <div><div class="snap-num">13</div><div class="snap-lbl">Countries</div></div>
     </div>
     <div class="snap-row">
       <span class="snap-ico"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 8h18M3 16h18"/></svg></span>
@@ -315,45 +315,31 @@ const HQ = { name:"ACWA HQ RIYADH", lat:24.8143, lon:46.7262 };
 
 const COUNTRIES = [
   { code:"KSA",   name:"SAUDI ARABIA", capital:"Riyadh",       lat:24.7136,  lon:46.6753,
-    plants:[
-      {n:"Afif 1, Afif 2",t:"R"},{n:"Al Humaij",t:"R"},{n:"Al Kahfah",t:"R"},{n:"AlKhulais",t:"R"},
-      {n:"Ar Rass, Ar Rass 2",t:"R"},{n:"Bisha PV",t:"R"},{n:"Haden PV",t:"R"},{n:"Jazan IGCC",t:"R"},
-      {n:"JWAP",t:"C"},{n:"Khushaybi PV",t:"R"},{n:"Laylaa",t:"R"},{n:"Muwaih PV",t:"R"},
-      {n:"NeomH2",t:"R"},{n:"Qassim",t:"C"},{n:"Rabigh 3, Rabigh 4",t:"W"},{n:"RABEC",t:"C"},
-      {n:"Ras Muhaisen",t:"C"},{n:"RAWEC, RAWEC Exp",t:"C"},{n:"Red Sea",t:"R"},{n:"Saad 2",t:"R"},
-      {n:"Sakaka",t:"R"},{n:"Shaqra",t:"R"},{n:"Shuaibah 1 & 2 PV",t:"R"},{n:"Starah",t:"R"},
-      {n:"Sudair",t:"R"},{n:"Taibah",t:"C"},{n:"Mourjan",t:"C"},{n:"Nairyah",t:"C"},
-      {n:"Rumah",t:"C"},{n:"SWEC RO",t:"W"},{n:"SEPCO",t:"W"},{n:"STPC",t:"W"},
-      {n:"Others (14 assets)",t:"R"}
-    ]},
+    plants:[{n:"ASB-1 PV",t:"R"},{n:"ASB-2 PV",t:"R"},{n:"Al Kahfah PV",t:"R"},{n:"Ar Rass-1 PV",t:"R"},{n:"Ar Rass-2 PV (ICOD)",t:"R"},{n:"Jubail-3A IWP",t:"W"},{n:"Layla PV",t:"R"},{n:"Marafiq IWPP",t:"W"},{n:"QIPP",t:"C"},{n:"R1IPP",t:"C"},{n:"R2IPP",t:"C"},{n:"RAWEC Ph-A",t:"W"},{n:"RAWEC Ph-B",t:"W"},{n:"Rabigh 3 IWP",t:"W"},{n:"Rabigh-4 IWP",t:"W"},{n:"Red Sea Project (ICOD)",t:"C"},{n:"Red Sea Project BEES (ICOD)",t:"R"},{n:"Red Sea Project ICE (ICOD)",t:"C"},{n:"Red Sea Project PV (ICOD)",t:"R"},{n:"S2WEP",t:"W"},{n:"S3 IWP",t:"W"},{n:"SIWEP",t:"W"},{n:"SQIWPP",t:"W"},{n:"Saad 2 PV",t:"R"},{n:"Sakaka PV",t:"R"},{n:"Sudair PV",t:"R"}]},
   { code:"UAE",   name:"UAE",           capital:"Abu Dhabi",  lat:24.4539,  lon:54.3773,
-    plants:[{n:"Hamriyah IWP",t:"W"},{n:"Hassyan",t:"C"},{n:"Hassyan IWP",t:"W"},{n:"NE1",t:"R"},{n:"Shuaa 1",t:"R"},{n:"Shuaa 3",t:"R"},{n:"Taweelah",t:"W"},{n:"UAQ",t:"W"}]},
+    plants:[{n:"DEWA-V Ph-A PV",t:"R"},{n:"DEWA-V Ph-B PV",t:"R"},{n:"DEWA-V Ph-C PV",t:"R"},{n:"Hassyan",t:"C"},{n:"Hassyan IWP (ICOD)",t:"W"},{n:"NE1 CT CSP (ICOD)",t:"R"},{n:"NE1 FD1 PV (ICOD)",t:"R"},{n:"NE1 FD2 PV (ICOD)",t:"R"},{n:"NE1 PT1 CSP (ICOD)",t:"R"},{n:"NE1 PT2 CSP (ICOD)",t:"R"},{n:"NE1 PT3 CSP (ICOD)",t:"R"},{n:"Shuaa PV",t:"R"},{n:"Taweelah IWP",t:"W"},{n:"UAQ IWP",t:"W"}]},
   { code:"OMN",   name:"OMAN",          capital:"Muscat",     lat:23.5880,  lon:58.3829,
-    plants:[{n:"Barka, Barka Exp, Barka Exp 2",t:"W"},{n:"Ibri, Ibri 2",t:"R"},{n:"Salalah 2 (2)",t:"C"},{n:"Salalah IWP",t:"W"},{n:"Sohar",t:"C"}]},
+    plants:[{n:"Barka IWPP",t:"W"},{n:"Ibri 1 IPP",t:"C"},{n:"Ibri PV",t:"R"},{n:"Salalah 1 IPP (Exst.)",t:"C"},{n:"Salalah 2 IPP(New)",t:"C"},{n:"Salalah IWP",t:"W"},{n:"Sohar 3 IPP",t:"C"}]},
   { code:"BHR",   name:"BAHRAIN",       capital:"Manama",     lat:26.2235,  lon:50.5876,
-    plants:[{n:"Al Dur, Al Dur 2",t:"C"},{n:"Al Ezzel",t:"C"},{n:"Al Hidd",t:"C"}]},
+    plants:[{n:"Al Dur-1 IWPP",t:"W"},{n:"Al Dur-2 IWPP",t:"W"},{n:"Al Ezzel IPP",t:"C"},{n:"Hidd Power Ph-1",t:"W"},{n:"Hidd Power Ph-2 & 3",t:"W"}]},
   { code:"KWT",   name:"KUWAIT",        capital:"Kuwait City",lat:29.3759,  lon:47.9774,
-    plants:[{n:"AzN1",t:"C"}]},
+    plants:[{n:"Az-Zour North Phase-1 IWPP",t:"W"}]},
   { code:"JOR",   name:"JORDAN",        capital:"Amman",      lat:31.9539,  lon:35.9106,
-    plants:[{n:"CEGCO",t:"C"},{n:"Mafraq",t:"R"},{n:"Risha",t:"R"},{n:"Zarqa",t:"C"}]},
+    plants:[{n:"Mafraq PV",t:"R"},{n:"Risha PV",t:"R"},{n:"Zarqa IPP",t:"C"}]},
   { code:"EGY",   name:"EGYPT",         capital:"Cairo",      lat:30.0444,  lon:31.2357,
-    plants:[{n:"BenBan 1, 2, 3",t:"R"},{n:"Hurghada Wind",t:"R"},{n:"Kom Ombo",t:"R"},{n:"Suez",t:"R"}]},
+    plants:[{n:"Benban AL PV",t:"R"},{n:"Benban AP PV",t:"R"},{n:"Benban TK PV",t:"R"},{n:"Kom Ombo PV",t:"R"}]},
   { code:"MAR",   name:"MOROCCO",       capital:"Rabat",      lat:34.0209,  lon:-6.8416,
-    plants:[{n:"Khalladi",t:"R"},{n:"NOOR I (3)",t:"R"},{n:"NOOR II",t:"R"},{n:"NOOR III",t:"R"},{n:"Noor PV1",t:"R"}]},
+    plants:[{n:"Khalladi Wind",t:"R"},{n:"Noor 1 CSP",t:"R"},{n:"Noor 2 CSP",t:"R"},{n:"Noor 3 CSP (ICOD)",t:"R"},{n:"Noor BJD PV",t:"R"},{n:"Noor IV ORZ PV",t:"R"},{n:"Noor LYN PV",t:"R"}]},
   { code:"ZAF",   name:"SOUTH AFRICA",  capital:"Pretoria",   lat:-25.7479, lon:28.2293,
-    plants:[{n:"Bokpoort",t:"R"},{n:"Redstone",t:"R"}]},
+    plants:[{n:"Bokpoort CSP",t:"R"},{n:"Redstone CSP",t:"R"}]},
   { code:"AZE",   name:"AZERBAIJAN",    capital:"Baku",       lat:40.4093,  lon:49.8671,
-    plants:[{n:"Azerbaijan",t:"R"},{n:"Caspian Sea",t:"W"}]},
+    plants:[{n:"Khizi-Absheron Wind",t:"R"},{n:"Khizi-Absheron Wind (ICOD)",t:"R"}]},
   { code:"TUR",   name:"TÜRKİYE",       capital:"Ankara",     lat:39.9334,  lon:32.8597,
-    plants:[{n:"Kirikkale",t:"C"}]},
+    plants:[{n:"KIPP",t:"C"}]},
   { code:"UZB",   name:"UZBEKISTAN",    capital:"Tashkent",   lat:41.2995,  lon:69.2401,
-    plants:[{n:"Aral 1, 2, 3, 4, 5",t:"R"},{n:"Bash, Bash 2",t:"R"},{n:"Dzhankeldy",t:"R"},{n:"Karatau 1, Karatau 2",t:"R"},{n:"Kungrad 1, 2, 3, Kungrad 4",t:"R"},{n:"Sazagan 1, Sazagan 2",t:"R"},{n:"Sirdarya",t:"C"},{n:"Riverside",t:"R"},{n:"Uzbekistan GH2",t:"R"}]},
+    plants:[{n:"AP Green H2 UKS (ICOD)",t:"R"},{n:"Bash Wind",t:"R"},{n:"DZH Wind",t:"R"},{n:"GH2 (BASH-52) Wind",t:"R"},{n:"Karatau (Nukus) Wind",t:"R"},{n:"Sirdarya IPP",t:"C"},{n:"Tashkent-1 PV",t:"R"}]},
   { code:"CHN",   name:"CHINA",         capital:"Beijing",    lat:39.9042,  lon:116.4074,
-    plants:[{n:"Boli II",t:"R"},{n:"Mingshang Wind",t:"R"},{n:"Mingxi Wind",t:"R"},{n:"Sungrow",t:"R"}]},
-  { code:"SEN",   name:"SENEGAL",       capital:"Dakar",      lat:14.7167,  lon:-17.4677,
-    plants:[{n:"Grand Cote",t:"W"}]},
-  { code:"IDN",   name:"INDONESIA",     capital:"Jakarta",    lat:-6.2088,  lon:106.8456,
-    plants:[{n:"Saguling",t:"R"},{n:"Singkarak",t:"R"}]}
+    plants:[{n:"Boli 2 Wind (ICOD)",t:"R"},{n:"Mingshang 100 MW Wind (ICOD)",t:"R"},{n:"Mingxi 100MW  Wind (ICOD)",t:"R"},{n:"Yangshan Yanghui PV",t:"R"},{n:"Yangshan Yuanbu  PV (ICOD)",t:"R"}]}
 ];
 
 const TECH_COLOR = { R:"#2D7FF9", W:"#26D9FF", C:"#8B5CF6" };
