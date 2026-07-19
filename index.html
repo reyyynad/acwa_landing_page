@@ -141,12 +141,17 @@ function drawEverything(){
     country:c, geo:greatCircleArc(HQ, c), color: dominantColor(c)
   }));
 
-  gArcs.selectAll("path.arc-base").data(arcData).join("path").attr("class","arc-base").attr("d", d=>path(d.geo)).attr("fill","none").attr("stroke", d=>d.color).attr("stroke-width",1.1).attr("stroke-opacity",.35).attr("stroke-linecap","round");
-  gArcs.selectAll("path.arc-anim").data(arcData).join("path").attr("class","arc-anim").attr("d", d=>path(d.geo)).attr("fill","none").attr("stroke", d=>d.color).attr("stroke-width",2.2).attr("stroke-linecap","round").attr("filter","url(#glow)").attr("stroke-dasharray","0 2000");
+ gArcs.selectAll("path.arc-base").data(arcData).join("path").attr("class","arc-base").attr("d", d=>path(d.geo)).attr("fill","none").attr("stroke","#2D7FF9").attr("stroke-width",1.1).attr("stroke-opacity",.35).attr("stroke-linecap","round");
+gArcs.selectAll("path.arc-anim").data(arcData).join("path").attr("class","arc-anim").attr("d", d=>path(d.geo)).attr("fill","none").attr("stroke","#2D7FF9").attr("stroke-width",2.2).attr("stroke-linecap","round").attr("filter","url(#glow)").attr("stroke-dasharray","0 2000");
 
-  const pts = gPoints.selectAll("g.pt").data(COUNTRIES).join("g").attr("class","pt");
-  pts.append("circle").attr("class","halo").attr("r", d=>d.code==="KSA"?12:8).attr("fill","none").attr("stroke", d=>d.code==="KSA"?"#B47CFF":dominantColor(d)).attr("stroke-width",1.5).attr("opacity",.6);
-  pts.append("circle").attr("class","dot").attr("r", d=>d.code==="KSA"?5:3.5).attr("fill", d=>d.code==="KSA"?"#B47CFF":dominantColor(d)).attr("filter","url(#glow)");
+const pts = gPoints.selectAll("g.pt").data(COUNTRIES).join("g").attr("class","pt");
+pts.append("circle").attr("class","halo").attr("r", d=>d.code==="KSA"?0:8).attr("fill","none").attr("stroke","#2D7FF9").attr("stroke-width",1.5).attr("opacity",.6);
+pts.append("circle").attr("class","dot").attr("r", d=>d.code==="KSA"?0:3.5).attr("fill","#2D7FF9").attr("filter","url(#glow)");
+/* Invisible click-target for Saudi Arabia (behind the house ring) */
+pts.append("circle").attr("class","hitbox")
+   .attr("r", d=>d.code==="KSA"?28:0)
+   .attr("fill","transparent")
+   .style("cursor","pointer");
 
   pts.on("click", function(event, d){
     event.stopPropagation();
@@ -307,12 +312,23 @@ labels.selectAll("*").remove();
 
 const hqEl = document.createElement("div");
 hqEl.className = "hq-label";
+hqEl.style.pointerEvents = "auto";
+hqEl.style.cursor = "pointer";
 hqEl.innerHTML = `
   <div class="ring">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-6h6v6"/></svg>
   </div>
   <div class="hqname">ACWA HQ<br/>RIYADH</div>
   <div class="hqcoord">24.8143° N, 46.7262° E</div>`;
+hqEl.addEventListener("click", (e) => {
+  e.stopPropagation();
+  showCard("KSA");
+});
+hqEl.addEventListener("touchend", (e) => {
+  e.stopPropagation();
+  e.preventDefault();
+  showCard("KSA");
+});
 document.getElementById("labels").appendChild(hqEl);
 
 function updateHQLabel(){
